@@ -7,10 +7,13 @@
 Repo: `motadata2025/md-sdk-flutter` · Branch: `motadata-dev` · Runners: `ubuntu-latest`.
 
 ## Toolchain the CI assumes
-- Flutter **stable (latest)**, Dart **≥ 3.6.0** (installed via `subosito/flutter-action`, `channel: stable`).
-  Latest stable is required because the example apps ship a Gradle 9.1.0 / AGP 8.9.1 wrapper that older
-  Flutter (3.27.x) cannot drive (`groovy.xml.QName`). `analyze` is scoped to `lib` (the shipped surface),
-  not the e2e/integration test sub-apps.
+- Flutter **pinned to 3.44.7** (Dart 3.12.2) via `subosito/flutter-action`. This is the stable that was
+  current when the `datadog_flutter_plugin/v3.4.1` tag was cut (2026-07-20) and matches the example apps'
+  toolchain (Gradle 9.1.0 / AGP 9.0.0 / Kotlin 2.1–2.2). Do **not** use latest stable (3.50+): it adds the
+  "built-in Kotlin" breaking change that the legacy-KGP example apps are not migrated for.
+- `analyze` is scoped to `lib` (the shipped surface), not the e2e/integration test sub-apps.
+- The example apps declare a `.env` asset (via `flutter_dotenv`); CI generates a placeholder before the APK
+  build (upstream uses `generate_env.sh`).
 - JDK **17** (Android gradle) — `actions/setup-java` temurin 17.
 - Android build via the package `example/` app (`flutter build apk`); native dep resolves
   `com.motadata:motadata-rum-android:1.0.1` from Maven Central (Phase 1 onward).

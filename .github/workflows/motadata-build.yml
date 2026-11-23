@@ -26,6 +26,10 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
+          # Pinned to the stable that was current when the v3.4.1 tag was cut (2026-07-20).
+          # Latest stable (3.50+) introduces the "built-in Kotlin" breaking change that the
+          # legacy-KGP example apps are not migrated for. 3.44.7 matches the authors' toolchain.
+          flutter-version: 3.44.7
           channel: stable
 
       - name: flutter --version
@@ -38,6 +42,15 @@ jobs:
       - name: analyze shipped surface (lib) — errors fatal, infos/warnings not
         working-directory: packages/${{ matrix.package }}
         run: flutter analyze --no-fatal-infos --no-fatal-warnings lib
+
+      - name: generate placeholder .env (declared asset; upstream uses generate_env.sh)
+        working-directory: packages/${{ matrix.package }}/example
+        run: |
+          cat > .env <<'EOF'
+          DD_CLIENT_TOKEN=
+          DD_APPLICATION_ID=
+          DD_ENV=prod
+          EOF
 
       - name: build example APK (proves Android native dependency resolves + plugin compiles)
         working-directory: packages/${{ matrix.package }}/example
