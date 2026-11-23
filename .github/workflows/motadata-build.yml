@@ -7,6 +7,7 @@ name: motadata-build
 on:
   push:
     branches: [motadata-dev]
+    paths-ignore: ['motadata-docs/**']
   workflow_dispatch:
 
 jobs:
