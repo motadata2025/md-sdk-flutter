@@ -7,7 +7,10 @@
 Repo: `motadata2025/md-sdk-flutter` · Branch: `motadata-dev` · Runners: `ubuntu-latest`.
 
 ## Toolchain the CI assumes
-- Flutter **stable ≥ 3.27.0**, Dart **≥ 3.6.0** (installed via `subosito/flutter-action`).
+- Flutter **stable (latest)**, Dart **≥ 3.6.0** (installed via `subosito/flutter-action`, `channel: stable`).
+  Latest stable is required because the example apps ship a Gradle 9.1.0 / AGP 8.9.1 wrapper that older
+  Flutter (3.27.x) cannot drive (`groovy.xml.QName`). `analyze` is scoped to `lib` (the shipped surface),
+  not the e2e/integration test sub-apps.
 - JDK **17** (Android gradle) — `actions/setup-java` temurin 17.
 - Android build via the package `example/` app (`flutter build apk`); native dep resolves
   `com.motadata:motadata-rum-android:1.0.1` from Maven Central (Phase 1 onward).

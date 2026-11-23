@@ -26,7 +26,6 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.27.4
           channel: stable
 
       - name: flutter --version
@@ -36,9 +35,9 @@ jobs:
         working-directory: packages/${{ matrix.package }}
         run: flutter pub get
 
-      - name: analyze (errors fatal; infos/warnings not)
+      - name: analyze shipped surface (lib) — errors fatal, infos/warnings not
         working-directory: packages/${{ matrix.package }}
-        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings lib
 
       - name: build example APK (proves Android native dependency resolves + plugin compiles)
         working-directory: packages/${{ matrix.package }}/example
