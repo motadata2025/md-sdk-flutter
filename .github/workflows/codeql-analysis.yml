@@ -1,0 +1,32 @@
+name: codeql-analysis
+
+# Security scan of the Android native layer (Kotlin). CodeQL does NOT support Dart, so the Dart
+# surface is covered by `flutter analyze` in motadata-build. Informational — not a Phase 0 gate.
+# build-mode: none avoids the Flutter-plugin gradle-autobuild complexity.
+
+on:
+  push:
+    branches: [motadata-dev]
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [java-kotlin]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:${{ matrix.language }}

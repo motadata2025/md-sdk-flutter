@@ -1,0 +1,32 @@
+name: motadata-test
+
+# Dart unit tests for the two shipping packages (pure Dart — no Android build needed).
+# Package dir names are renamed to motadata_* in Phase 1 — update the matrix then.
+
+on:
+  push:
+    branches: [motadata-dev]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [datadog_flutter_plugin, datadog_tracking_http_client]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.27.4
+          channel: stable
+
+      - name: pub get
+        working-directory: packages/${{ matrix.package }}
+        run: flutter pub get
+
+      - name: flutter test
+        working-directory: packages/${{ matrix.package }}
+        run: flutter test

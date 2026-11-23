@@ -1,0 +1,52 @@
+name: motadata-publish
+
+# Publishes the shipping packages to pub.dev. PHASE 3 ONLY.
+# Auth is pub.dev automated publishing via GitHub OIDC (no stored token):
+#   - the package must exist on pub.dev with this repo set as a trusted publisher, and
+#   - a pub.dev verified publisher (verified against motadata.com).
+# dry_run (default true) runs `flutter pub publish --dry-run` — safe, no credentials needed.
+# Package dirs are motadata_* (renamed in Phase 1).
+
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Which package to publish
+        type: choice
+        default: motadata_flutter_plugin
+        options:
+          - motadata_flutter_plugin
+          - motadata_tracking_http_client
+      dry_run:
+        description: Dry run only (no real publish)
+        type: boolean
+        default: true
+
+permissions:
+  id-token: write   # required for pub.dev OIDC on a real publish
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.27.4
+          channel: stable
+
+      - name: pub get
+        working-directory: packages/${{ inputs.package }}
+        run: flutter pub get
+
+      - name: dry-run publish
+        if: ${{ inputs.dry_run }}
+        working-directory: packages/${{ inputs.package }}
+        run: flutter pub publish --dry-run
+
+      - name: real publish (pub.dev OIDC)
+        if: ${{ !inputs.dry_run }}
+        working-directory: packages/${{ inputs.package }}
+        run: flutter pub publish --force

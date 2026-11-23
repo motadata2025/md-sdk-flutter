@@ -1,0 +1,67 @@
+name: motadata-nodatadog
+
+# Fails if any Datadog branding survives on a SHIPPED surface.
+# Phase 0: EXPECTED RED (the base is still DataDog) — dispatch-only until Phase 1,
+# where the rebrand lands and a push trigger is added so this gate guards every change.
+#
+# Whitelist (allowed to contain "datadog"/"dd"):
+#   - the Apache-2.0 attribution header (Copyright ... Datadog, Inc.)
+#   - the `_dd.*` config KEYS the frozen native SDK reads (e.g. _dd.source, _dd.needsClearTextHttp)
+#     — native does the _dd -> _md rebrand on the wire; these keys are not branding.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  nodatadog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Grep shipped surfaces for Datadog branding
+        run: |
+          set -uo pipefail
+
+          # Shipped package dirs (renamed to motadata_* in Phase 1 — update then).
+          PKGS="datadog_flutter_plugin datadog_tracking_http_client"
+
+          # Shipped surfaces within each package (what ends up in the pub.dev archive /
+          # the Android AAR). Tests, examples and e2e apps are not shipped.
+          SUBPATHS="lib android/src ios/Classes pubspec.yaml README.md CHANGELOG.md"
+
+          # Forbidden branding tokens (case-insensitive):
+          #   datadog, com.datadoghq, dd-sdk, ddsource, ddtags, DD-<HEADER>, and Dd<Type> identifiers.
+          # NOTE: bare `_dd` is NOT forbidden (config keys) — it does not match these patterns.
+          PATTERN='datadog|com\.datadoghq|dd-sdk|ddsource|ddtags|DD-[A-Z]|\bDd[A-Z][A-Za-z0-9]*'
+
+          hits=0
+          for p in $PKGS; do
+            for sp in $SUBPATHS; do
+              target="packages/$p/$sp"
+              [ -e "$target" ] || continue
+              # grep, then strip whitelisted lines:
+              #  - Apache attribution:  "Copyright ... Datadog, Inc."
+              #  - SPDX / license refs: lines mentioning Apache-2.0
+              #  - allowed _dd. config keys
+              out=$(grep -rniE "$PATTERN" "$target" 2>/dev/null \
+                    | grep -viE 'Copyright .*Datadog, Inc' \
+                    | grep -viE 'Apache(-| )2\.0' \
+                    | grep -viE '_dd\.(source|needsClearTextHttp|sdk_version|version)' \
+                    || true)
+              if [ -n "$out" ]; then
+                echo "::group::LEAK in $target"
+                echo "$out"
+                echo "::endgroup::"
+                n=$(printf '%s\n' "$out" | wc -l)
+                hits=$((hits + n))
+              fi
+            done
+          done
+
+          echo "----------------------------------------"
+          echo "Total forbidden datadog hits on shipped surfaces: $hits"
+          if [ "$hits" -ne 0 ]; then
+            echo "::error::Datadog branding present on shipped surfaces (expected RED on the untouched base; must be 0 after Phase 1)."
+            exit 1
+          fi
+          echo "OK — zero Datadog branding on shipped surfaces."

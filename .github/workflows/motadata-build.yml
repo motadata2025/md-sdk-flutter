@@ -1,0 +1,47 @@
+name: motadata-build
+
+# Compiles the two shipping packages on GitHub runners (golden rule: nothing compiles on the laptop).
+# Phase 0: runs against the UNTOUCHED Datadog v3.4.1 base to prove the pipeline before any rebrand.
+# Package dir names are renamed to motadata_* in Phase 1 — update the matrix then.
+
+on:
+  push:
+    branches: [motadata-dev]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [datadog_flutter_plugin, datadog_tracking_http_client]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.27.4
+          channel: stable
+
+      - name: flutter --version
+        run: flutter --version
+
+      - name: pub get (package)
+        working-directory: packages/${{ matrix.package }}
+        run: flutter pub get
+
+      - name: analyze (errors fatal; infos/warnings not)
+        working-directory: packages/${{ matrix.package }}
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+
+      - name: build example APK (proves Android native dependency resolves + plugin compiles)
+        working-directory: packages/${{ matrix.package }}/example
+        run: |
+          flutter pub get
+          flutter build apk --release
