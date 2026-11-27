@@ -24,7 +24,30 @@ Status key: ✅ done · 🔄 in progress · ⬜ not started.
   - `motadata-nodatadog` is EXPECTED RED here (base is DataDog) — dispatch-only until Phase 1.
 - ✅ Added `paths-ignore: motadata-docs/**` to build/test so docs commits don't burn a full APK build.
 
-## Phase 1 — Rebrand / repoint native / zero-datadog  (⬜ not started)
+## Phase 1 — Rebrand / repoint native / zero-datadog  (✅ DONE, 2026-11-27)
+- ✅ Trimmed to the 2 shipping packages (+ `motadata_common_test`); deleted the 8 dropped packages
+  (session_replay, webview, inappwebview, dio, grpc, gql, flags) and all Datadog dev/release tooling.
+- ✅ Dropped **iOS** (native Swift dir; Android-only), **Web** (self-contained), **Logs** and **NDK**
+  (no Motadata native module → public Logs API, NDK crash path, log mappers, Kotlin logs plugin all removed).
+- ✅ Full rebrand per the token map across Dart + Android Kotlin + method channels + pubspecs via a
+  uniform content+path pass (`Datadog→Motadata`, `com.datadoghq.flutter→com.motadata.flutter`,
+  native `com.datadog.android→com.motadata.android` incl. `DatadogSite→MotadataSite`,
+  `DatadogContext→MotadataContext`, channel `datadog_sdk_flutter→motadata_sdk_flutter`, `DdRum→MdRum`,
+  lowercase `ddrum→mdrum`). jnigen JNI runtime paths match the frozen native by construction
+  (verified against the cached AARs).
+- ✅ Repointed Android dep → `com.motadata:motadata-rum-android:1.0.1` (drop logs/ndk). Set source
+  via the kept `_dd.source` config key → `flutter`. Added the `motadata_tracking_http_client` →
+  `motadata_flutter_plugin` path override.
+- ✅ Gate whitelist intentionally keeps (wire/native identifiers the frozen native owns, documented in
+  `PHASE1_EXECUTION_NOTES.md`): Apache attribution header, `_dd.*` config keys, `x-datadog-*` APM
+  propagation headers, and the native method name `getDatadogContext`.
+- ✅ **GATE GREEN (commit `fb61ac28`):** `motadata-nodatadog` run `45980909699` (zero datadog on
+  shipped surfaces) + `motadata-build` run `45980909463` (both example APKs compile; native dep
+  resolves; Kotlin compiles against the fork) + `motadata-test` run `45980909538` (Dart tests pass).
+  Publishable as `1.0.0`.
+  - CodeQL (`45980909656`) is RED — informational only (java-kotlin autobuild hits transient Maven
+    fetches on the example gradle project); not part of the Phase 1 gate. Follow-up: set build-mode none.
+
 ## Phase 2 — Functional verification  (⬜ not started)
 ## Phase 3 — Publish to pub.dev  (⬜ not started)
 ## Phase 4 — Live capture verification  (⬜ not started)
