@@ -57,7 +57,10 @@ Status key: ✅ done · 🔄 in progress · ⬜ not started.
 - ✅ No new Dart functional code required (matches RN). Added a focused test
   ("source is set to flutter on initialize"); `customEndpoint` was already covered.
 - ✅ **GATE GREEN (commit `81ea58de`):** `motadata-build` + `motadata-test` + `motadata-nodatadog`
-  all green. CodeQL still informational-red (unchanged; follow-up).
+  all green.
+- ✅ **CodeQL fixed & green:** build-mode `none` can't extract the Kotlin bridge standalone
+  ("no source code seen"); switched to build-mode `manual` compiling the plugin via the example APK.
+  Dart is unsupported by CodeQL (covered by `flutter analyze`). All four workflows now green.
 
 ## Phase 3 — Publish to pub.dev  (⬜ not started)
 ## Phase 4 — Live capture verification  (⬜ not started)
