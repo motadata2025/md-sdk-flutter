@@ -235,23 +235,6 @@ void main() {
     expect(additionalConfig[MotadataConfigKey.version], '1.9.8-123');
   });
 
-  test('source is set to flutter on initialize', () async {
-    // The native SDK reads the _dd.source config key and rebrands it to
-    // `mdsource=flutter` on the wire. The Flutter layer must set it to 'flutter'.
-    final configuration = MotadataConfiguration(
-      clientToken: 'clientToken',
-      env: 'env',
-      site: MotadataSite.us1,
-    );
-
-    await datadogSdk.initialize(configuration, TrackingConsent.granted);
-
-    expect(
-      configuration.additionalConfig[MotadataConfigKey.source],
-      'flutter',
-    );
-  });
-
   test('flavor added to additionalConfiguration', () {
     final configuration = MotadataConfiguration(
       clientToken: 'fakeClientToken',
@@ -296,6 +279,36 @@ void main() {
     final rum = motadataSdk.rum;
     expect(rum, isNotNull);
     verify(() => mockRumPlatform.enable(motadataSdk, rumConfiguration));
+  });
+
+  test('source is set to flutter on initialize', () async {
+    // The native SDK reads the _dd.source config key and rebrands it to
+    // `mdsource=flutter` on the wire. The Flutter layer must set it to 'flutter'.
+    when(
+      () => mockPlatform.initialize(
+        any(),
+        any(),
+        internalLogger: any(named: 'internalLogger'),
+        logCallback: any(named: 'logCallback'),
+      ),
+    ).thenAnswer(
+      (_) => Future<PlatformInitializationResult>.value(
+        const PlatformInitializationResult(logs: false, rum: false),
+      ),
+    );
+
+    final configuration = MotadataConfiguration(
+      clientToken: 'clientToken',
+      env: 'env',
+      site: MotadataSite.us1,
+    );
+
+    await motadataSdk.initialize(configuration, TrackingConsent.granted);
+
+    expect(
+      configuration.additionalConfig[MotadataConfigKey.source],
+      'flutter',
+    );
   });
 
   test('attachToExisting calls out to platform', () async {
