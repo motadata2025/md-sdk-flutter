@@ -1,12 +1,17 @@
 name: codeql-analysis
 
-# Security scan of the Android native layer (Kotlin). CodeQL does NOT support Dart, so the Dart
-# surface is covered by `flutter analyze` in motadata-build. Informational — not a Phase 0 gate.
-# build-mode: none avoids the Flutter-plugin gradle-autobuild complexity.
+# Security scan of the Android native layer (Kotlin bridge). CodeQL does NOT support Dart,
+# so the Dart surface is covered by `flutter analyze` in motadata-build.
+#
+# build-mode `none` cannot extract the Kotlin standalone (no classpath -> "no source code seen"),
+# so we use build-mode `manual`: compile the plugin's Kotlin via the example APK build (same
+# toolchain as motadata-build), which CodeQL traces to build its database. Informational — not a
+# release gate.
 
 on:
   push:
     branches: [motadata-dev]
+    paths-ignore: ['motadata-docs/**']
   workflow_dispatch:
 
 jobs:
@@ -15,18 +20,35 @@ jobs:
     permissions:
       security-events: write
       contents: read
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [java-kotlin]
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.7
+          channel: stable
+
       - uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
-          build-mode: none
+          languages: java-kotlin
+          build-mode: manual
+
+      - name: Build the Kotlin bridge (compiles the plugin's Android code for CodeQL)
+        working-directory: packages/motadata_flutter_plugin/example
+        run: |
+          cat > .env <<'EOF'
+          DD_CLIENT_TOKEN=
+          DD_APPLICATION_ID=
+          DD_ENV=prod
+          EOF
+          flutter pub get
+          flutter build apk --debug
 
       - uses: github/codeql-action/analyze@v3
         with:
-          category: /language:${{ matrix.language }}
+          category: /language:java-kotlin
