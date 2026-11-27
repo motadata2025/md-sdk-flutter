@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [datadog_flutter_plugin, datadog_tracking_http_client]
+        package: [motadata_flutter_plugin, motadata_tracking_http_client]
     steps:
       - uses: actions/checkout@v4
 

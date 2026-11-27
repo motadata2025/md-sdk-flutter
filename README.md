@@ -1,24 +1,31 @@
-<p align="center">
-    <img src="https://imgix.datadoghq.com/img/about/presskit/logo-v/dd_vertical_white.png" width="200">
-</p>
+# Motadata Flutter RUM SDK
 
-# DataDog Flutter Plugin Packages
-
-This is the monorepo for Datadog Flutter packages. To get started, check the
-[README](packages/datadog_flutter_plugin/README.md) in the core plugin.
+Flutter Real User Monitoring (RUM) SDK for **Android**, published to pub.dev as two
+packages. It is a rebranded fork of the Datadog Flutter SDK, mirroring the Motadata
+Android (`md-sdk-android`) and React Native (`md-sdk-reactnative`) SDKs, and inherits
+its entire wire contract from the frozen native artifact
+`com.motadata:motadata-rum-android:1.0.1`.
 
 ## Packages
 
-| Package | Pub | Repo |
-| :-----: | :-: | :--: |
-| datadog_flutter_plugin | [![Pub](https://img.shields.io/pub/v/datadog_flutter_plugin.svg)](https://pub.dev/packages/datadog_flutter_plugin) | [packages/datadog_flutter_plugin](packages/datadog_flutter_plugin/) | 
-| datadog_flags | [![Pub](https://img.shields.io/pub/v/datadog_flags.svg)](https://pub.dev/packages/datadog_flags) | [packages/datadog_flags](packages/datadog_flags/) |
-| datadog_flags_flutter | [![Pub](https://img.shields.io/pub/v/datadog_flags_flutter.svg)](https://pub.dev/packages/datadog_flags_flutter) | [packages/datadog_flags_flutter](packages/datadog_flags_flutter/) |
-| datadog_tracking_http_client | [![Pub](https://img.shields.io/pub/v/datadog_tracking_http_client.svg)](https://pub.dev/packages/datadog_tracking_http_client) | [packages/datadog_tracking_http_client](packages/datadog_tracking_http_client/) | 
-| datadog_webview_tracking | [![Pub](https://img.shields.io/pub/v/datadog_webview_tracking.svg)](https://pub.dev/packages/datadog_webview_tracking) | [packages/datadog_webview_tracking](packages/datadog_webview_tracking/) 
-| datadog_grpc_interceptor | [![Pub](https://img.shields.io/pub/v/datadog_grpc_interceptor.svg)](https://pub.dev/packages/datadog_grpc_interceptor) | [packages/datadog_grpc_interceptor](packages/datadog_grpc_interceptor/) | 
-| datadog_gql_link | [![Pub](https://img.shields.io/pub/v/datadog_gql_link.svg)](https://pub.dev/packages/datadog_gql_link) | [packages/datadog_gql_link](packages/datadog_gql_link/) | 
+| Package | Description |
+|---|---|
+| [`motadata_flutter_plugin`](packages/motadata_flutter_plugin) | RUM core — views, actions, resources, errors, long tasks |
+| [`motadata_tracking_http_client`](packages/motadata_tracking_http_client) | HTTP resource tracking + distributed-tracing headers |
 
-# Contributing
+## Scope
 
-Please read the [Contributing Guide](CONTRIBUTING.md)
+- **Android only** (iOS and Web are not supported in this release).
+- RUM only. Logs, Session Replay, WebView tracking, NDK native-crash reporting and
+  Feature Flags are not shipped.
+
+## Development
+
+All building, testing and publishing runs on GitHub Actions (see `.github/workflows`
+and `motadata-docs/WORKFLOW.md`). Nothing is built locally.
+
+## License
+
+Apache-2.0. This project is a rebranded derivative of the Datadog Flutter SDK;
+the original Apache-2.0 attribution headers (`NOTICE`, `LICENSE`, and per-file
+headers) are retained per the terms of the license.

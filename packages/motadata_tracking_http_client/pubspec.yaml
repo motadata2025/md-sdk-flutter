@@ -1,0 +1,30 @@
+name: motadata_tracking_http_client
+description: A wrapping implementation of HttpClient for tracking resources with the Motadata RUM SDK.
+version: 1.0.0
+repository: https://github.com/motadata2025/md-sdk-flutter
+homepage: https://www.motadata.com
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  motadata_flutter_plugin: ^1.0.0
+  uuid: ^4.0.0
+  http: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  motadata_common_test:
+    path: ../motadata_common_test
+  flutter_lints: ^2.0.1
+  mocktail: ^0.2.0
+
+# Until motadata_flutter_plugin is published to pub.dev, resolve it from the
+# local monorepo so CI (build/test) and local development work from source.
+dependency_overrides:
+  motadata_flutter_plugin:
+    path: ../motadata_flutter_plugin

@@ -1,4 +1,0 @@
-# Ignore Gradle Wrapper
-example/android/gradle/wrapper/*
-# Ignore Golden Tests
-example/golden_test/*

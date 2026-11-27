@@ -10,6 +10,9 @@ name: motadata-nodatadog
 #     — native does the _dd -> _md rebrand on the wire; these keys are not branding.
 
 on:
+  push:
+    branches: [motadata-dev]
+    paths-ignore: ['motadata-docs/**']
   workflow_dispatch:
 
 jobs:
@@ -22,8 +25,8 @@ jobs:
         run: |
           set -uo pipefail
 
-          # Shipped package dirs (renamed to motadata_* in Phase 1 — update then).
-          PKGS="datadog_flutter_plugin datadog_tracking_http_client"
+          # Shipped package dirs.
+          PKGS="motadata_flutter_plugin motadata_tracking_http_client"
 
           # Shipped surfaces within each package (what ends up in the pub.dev archive /
           # the Android AAR). Tests, examples and e2e apps are not shipped.
@@ -45,7 +48,9 @@ jobs:
               #  - allowed _dd. config keys
               out=$(grep -rniE "$PATTERN" "$target" 2>/dev/null \
                     | grep -viE 'Copyright .*Datadog, Inc' \
+                    | grep -viE 'developed at Datadog' \
                     | grep -viE 'Apache(-| )2\.0' \
+                    | grep -viE 'x-datadog-' \
                     | grep -viE '_dd\.(source|needsClearTextHttp|sdk_version|version)' \
                     || true)
               if [ -n "$out" ]; then

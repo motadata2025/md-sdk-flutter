@@ -1,0 +1,12 @@
+-keep class com.motadata.android.api.context.* { *; }
+-keep class com.motadata.flutter.MotadataSdkPlugin { *; }
+-keep class com.motadata.flutter.MotadataSdkPlugin$Companion { *; }
+-keep class com.motadata.flutter.MotadataLogsPlugin { *; }
+-keep class com.motadata.flutter.MotadataLogsPlugin$Companion { *; }
+-keep class com.motadata.flutter.MotadataLogEventMapper { *; }
+-keep class com.motadata.flutter.MotadataLogEventMapper$EventMapper { *; }
+-keep class com.motadata.flutter.MotadataRumPlugin { *; }
+-keep class com.motadata.flutter.MotadataRumPlugin$Companion { *; }
+-keep class com.motadata.flutter.MotadataRumEventMapper { *; }
+-keep class com.motadata.flutter.MotadataRumEventMapper$EventMapper { *; }
+-dontwarn motadata.compiler.annotations.*
