@@ -48,7 +48,17 @@ Status key: ✅ done · 🔄 in progress · ⬜ not started.
   - CodeQL (`45980909656`) is RED — informational only (java-kotlin autobuild hits transient Maven
     fetches on the example gradle project); not part of the Phase 1 gate. Follow-up: set build-mode none.
 
-## Phase 2 — Functional verification  (⬜ not started)
+## Phase 2 — Functional verification  (✅ DONE, 2026-11-27)
+- ✅ Code-audited the 5 IN-scope wire items and confirmed each is correctly wired Dart→native
+  (evidence with file:line in `functional-changes/02-wire-contract-verification.md`):
+  `md-api-key` (clientToken passthrough), `mdsource=flutter` (`_dd.source='flutter'` →
+  `setAdditionalConfiguration`), custom-endpoint (`customEndpoint` → `useCustomEndpoint`),
+  `session.created` + `_md.document_version` (native-emitted, not stripped).
+- ✅ No new Dart functional code required (matches RN). Added a focused test
+  ("source is set to flutter on initialize"); `customEndpoint` was already covered.
+- ✅ **GATE GREEN (commit `81ea58de`):** `motadata-build` + `motadata-test` + `motadata-nodatadog`
+  all green. CodeQL still informational-red (unchanged; follow-up).
+
 ## Phase 3 — Publish to pub.dev  (⬜ not started)
 ## Phase 4 — Live capture verification  (⬜ not started)
 ## Phase 5 — Client SOP  (⬜ not started)
