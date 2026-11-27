@@ -76,8 +76,10 @@ kotlin {
 }
 
 dependencies {
-    // The RUM native stack is provided transitively by the motadata_flutter_plugin
-    // path dependency (com.motadata:motadata-rum-android:1.0.1).
+    // The example's MainActivity references native RUM classes directly
+    // (GlobalRumMonitor, RumErrorSource), so it needs the native artifact on its
+    // own compile classpath (the plugin exposes it via `implementation`, not `api`).
+    implementation "com.motadata:motadata-rum-android:1.0.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.work:work-runtime-ktx:2.8.0'
 }
