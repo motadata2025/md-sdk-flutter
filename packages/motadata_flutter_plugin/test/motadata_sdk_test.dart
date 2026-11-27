@@ -235,6 +235,23 @@ void main() {
     expect(additionalConfig[MotadataConfigKey.version], '1.9.8-123');
   });
 
+  test('source is set to flutter on initialize', () async {
+    // The native SDK reads the _dd.source config key and rebrands it to
+    // `mdsource=flutter` on the wire. The Flutter layer must set it to 'flutter'.
+    final configuration = MotadataConfiguration(
+      clientToken: 'clientToken',
+      env: 'env',
+      site: MotadataSite.us1,
+    );
+
+    await datadogSdk.initialize(configuration, TrackingConsent.granted);
+
+    expect(
+      configuration.additionalConfig[MotadataConfigKey.source],
+      'flutter',
+    );
+  });
+
   test('flavor added to additionalConfiguration', () {
     final configuration = MotadataConfiguration(
       clientToken: 'fakeClientToken',
