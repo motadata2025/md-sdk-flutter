@@ -3,7 +3,7 @@
 // Copyright 2025-Present Datadog, Inc.
 
 import 'package:motadata_common_test/motadata_common_test.dart';
-import 'package:motadata_flutter_plugin/src/rum/ddrum.dart';
+import 'package:motadata_flutter_plugin/src/rum/mdrum.dart';
 import 'package:motadata_flutter_plugin/src/rum/inv_metric_provider.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -42,7 +42,9 @@ class MotadataSdkPlugin : FlutterPlugin, MethodCallHandler {
 
         fun getCoreContext(): MotadataContext? {
             val sdkCore = Motadata.getInstance() as? InternalSdkCore
-            return sdkCore?.getMotadataContext(setOf(Feature.RUM_FEATURE_NAME))
+            // NOTE: the native method name getDatadogContext is kept by the frozen
+            // motadata-rum-android artifact (it returns a MotadataContext). Do not rename.
+            return sdkCore?.getDatadogContext(setOf(Feature.RUM_FEATURE_NAME))
         }
     }
 

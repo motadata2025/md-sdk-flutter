@@ -51,6 +51,7 @@ jobs:
                     | grep -viE 'developed at Datadog' \
                     | grep -viE 'Apache(-| )2\.0' \
                     | grep -viE 'x-datadog-' \
+                    | grep -viE 'getDatadogContext' \
                     | grep -viE '_dd\.(source|needsClearTextHttp|sdk_version|version)' \
                     || true)
               if [ -n "$out" ]; then

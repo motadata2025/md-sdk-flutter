@@ -7,8 +7,8 @@ import 'dart:math';
 
 import 'package:motadata_common_test/motadata_common_test.dart';
 import 'package:motadata_flutter_plugin/motadata_internal.dart';
-import 'package:motadata_flutter_plugin/src/rum/ddrum.dart';
-import 'package:motadata_flutter_plugin/src/rum/ddrum_method_channel.dart';
+import 'package:motadata_flutter_plugin/src/rum/mdrum.dart';
+import 'package:motadata_flutter_plugin/src/rum/mdrum_method_channel.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

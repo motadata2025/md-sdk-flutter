@@ -9,8 +9,8 @@ import 'package:motadata_common_test/motadata_common_test.dart'
     hide DurationHelpers;
 import 'package:motadata_flutter_plugin/motadata_flutter_plugin.dart';
 import 'package:motadata_flutter_plugin/motadata_internal.dart';
-import 'package:motadata_flutter_plugin/src/rum/ddrum_noop_platform.dart';
-import 'package:motadata_flutter_plugin/src/rum/ddrum_platform_interface.dart';
+import 'package:motadata_flutter_plugin/src/rum/mdrum_noop_platform.dart';
+import 'package:motadata_flutter_plugin/src/rum/mdrum_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

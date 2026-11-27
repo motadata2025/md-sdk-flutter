@@ -4,7 +4,7 @@
 
 import 'package:motadata_flutter_plugin/motadata_flutter_plugin.dart';
 import 'package:motadata_flutter_plugin/motadata_internal.dart';
-import 'package:motadata_flutter_plugin/src/rum/ddrum_platform_interface.dart';
+import 'package:motadata_flutter_plugin/src/rum/mdrum_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
